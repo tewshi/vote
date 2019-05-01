@@ -6,27 +6,32 @@ ini_set('display_error', '1');
 error_reporting(E_ALL);
 $error = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    if (empty($email)) {
+
+    if (!isset($_POST['email'])) {
         $error = "Please your email is required";
-    }
+    } else {
+        $email = $_POST['email'];
+        if (empty($email)) {
+            $error = "Please your email is required";
+        } else {
+            try {
 
-    try {
-
-        $stmt = $db_con->prepare("SELECT email FROM valvoters WHERE email='$email'");
-        $stmt->execute();
-        // $result = $stmt->get_result();
-        $count = $stmt->rowCount();
-        if ($count === 1) { 
-            // create session for the user
-            $_SESSION["email"] = $email;
-            header('Location: http://localhost:8888/valleevote/contestant.php');
-        } 
-        // print_r($stmt->fetchAll());
-        // // echo $count;
-    } catch (PDOException $e) {
-        echo $e->getMessage();
+                $stmt = $db_con->prepare("SELECT email FROM valvoters WHERE email='$email'");
+                $stmt->execute();
+                $count = $stmt->rowCount();
+                if ($count == 1) { 
+                    // create session for the user
+                    $_SESSION["email"] = $email;
+                    header('Location: /contestant.php');
+                } else {
+                    $error = 'User account not found!';
+                }
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+            }
+        }
     }
+    
 
 }
 
@@ -66,34 +71,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             <div class="card-footer">
-            <a href="http://localhost:8888/valleevote/register.php">Signup</a>
+            <a class="btn btn-primary" href="/register.php">Signup</a>
         </div>
         </div>
     </div>
-    <script src="bootstrap.min.js"></script>
     <script src="jquery-2.1.4.min.js"></script>
-    <script>
-        // function to vote for a contestant
-
-        // first check if the person is login and if he/she has vote before
-        function vote(id) {
-            if (!id) {
-                return alert("cant find ur ID");
-            }
-            //check if the person is log in
-            $.ajax({
-                url: "processvote.php",
-                method: "POST",
-                data: { "id": id }
-            }).done(function (resp) {
-                console.log(resp);
-            }).fail(function (err) {
-                alert(err);
-            })
-        }
-
-
-    </script>
+    <script src="bootstrap.min.js"></script>
 </body>
 
 </html>
