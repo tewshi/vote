@@ -46,7 +46,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         <input type='text' value='$row[id]' name='id' style='display:none'>
         <input class='btn btn-primary' type='submit' value='vote'/>
     </form>";
-    echo "<span class=\"btn btn-default\">$row[vote]</span>";
+    echo "<span class=\"btn btn-default\" id='count-$row[id]'>$row[vote]</span>";
     echo ' </div>';
     echo ' </div>';
 }
@@ -69,6 +69,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 data: { "id": id }
             }).done(function (resp) {
                 const response = JSON.parse(resp);
+                $('count-' + id).innerText = response.votes;
                 alert(response.message);
             }).fail(function (err) {
                 const response = JSON.parse(err.responseText);

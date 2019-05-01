@@ -23,7 +23,6 @@
         if ($row["vote"] == 0) {
             $stmt = $db_con->prepare("SELECT * FROM students WHERE id='$contestant_id' LIMIT 1");
             $stmt->execute();
-            $student = $stmt->fetch(PDO::FETCH_ASSOC);
             $studentCount	= $stmt->rowCount();
             if ($studentCount == 1) {
                 $stmt = $db_con->prepare("UPDATE students SET vote = vote + 1 WHERE id='$contestant_id'");
@@ -32,8 +31,11 @@
                     $stmt = $db_con->prepare("UPDATE valvoters SET vote = 1 WHERE email='$session_var'");
                     $stmt->execute();
                     if ($stmt) {
+                        $stmt = $db_con->prepare("SELECT * FROM students WHERE id='$contestant_id' LIMIT 1");
+                        $stmt->execute();
+                        $student = $stmt->fetch(PDO::FETCH_ASSOC);
                         http_response_code(200);
-                        echo json_encode(["message" => "You have voted successfully for $student[name]!"]);
+                        echo json_encode(["message" => "You have voted successfully for $student[name]!", "votes" => $student['vote']]);
                         exit();
                     } else {
                         http_response_code(500);
