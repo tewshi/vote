@@ -69,7 +69,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 data: { "id": id }
             }).done(function (resp) {
                 const response = JSON.parse(resp);
-                $('count-' + id).innerText = response.votes;
+                $('#count-' + id).innerText = response.votes;
                 alert(response.message);
             }).fail(function (err) {
                 const response = JSON.parse(err.responseText);
