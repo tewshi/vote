@@ -4,7 +4,7 @@ require 'dbconfig.php';
 ini_set('display_error', '1');
 error_reporting(E_ALL);
 // check if login take to vote
-$_SESSION["email"] ? header('Location: http://localhost:8888/valleevote/contestant.php') : header('Location: http://localhost:8888/valleevote/login.php');
+$_SESSION["email"] ? header('Location: /contestant.php') : header('Location: /login.php');
 
 
 
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // set the user to the session
                 $_SESSION["email"] = $email;
                 // redirect to the voting page
-                header('Location: http://localhost:8888/valleevote/contestant.php');
+                header('Location: /contestant.php');
             } else {
                 $error = 'Something went wrong!';
             }
@@ -81,11 +81,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
         <div class="card-footer">
-            <a href="http://localhost:8888/valleevote/login.php">Login</a>
+            <a href="/login.php">Login</a>
         </div>
     </div>
-    <script src="bootstrap.min.js"></script>
     <script src="jquery-2.1.4.min.js"></script>
+    <script src="bootstrap.min.js"></script>
 </body>
 
 </html>

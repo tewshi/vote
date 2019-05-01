@@ -6,14 +6,33 @@
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="http://localhost:8888/valleevote/contestant.php">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/contestant.php">Home <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+    <?php
+      $email = '';
+      if (isset($_SESSION['email'])) {
+        $email = $_SESSION['email'];
+      }
+    ?>
+    <?php if(!empty($email)){ ?>
+      <li class="nav-item">
+        <span class="navbar-text">
+        <?php echo $email;?>
+      </span>
       </li>
       <li class="nav-item">
-        <a class="nav-link " href="http://localhost:8888/valleevote/register.php"><?php if($_SESSION["email"]){ echo '';}else{ echo 'Signup'; } ;?></a>
+        <a class="nav-link" href="/logout.php">Logout</a>
+      </li>
+      <?php } else { ?>
+      <li class="nav-item">
+        <a class="nav-link" href="/register.php">Signup</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8888/valleevote/login.php"><?php if($_SESSION["email"]){ echo '';}else{ echo 'Login'; } ;?></a>
+        <a class="nav-link" href="/login.php">Login</a>
       </li>
+      <?php } ?>
     </ul>
     <span class="navbar-text">
       

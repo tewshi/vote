@@ -4,11 +4,11 @@ ini_set('display_error', '1');
 error_reporting(E_ALL);
 require_once 'dbconfig.php';
 
-$email = $_SESSION['email'];
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
+}
 
-$email = $_SESSION['email'];
 try {
-
     $stmt = $db_con->prepare("SELECT * FROM students");
     $stmt->execute();
 } catch (PDOException $e) {
@@ -42,26 +42,25 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     echo '<div class="card-body">';
     echo "<h5 class=\"card-title\">$row[name]</h5>";
     echo '<p class="card-text"> </p>';
-    echo "<form method='POST' action='votes.php'>
+    echo "<form method='POST' action='' data-id='$row[id]' class='vote-form'>
         <input type='text' value='$row[id]' name='id' style='display:none'>
-        <input class='btn btn-primary' id='voteNow' type='submit' value='vote'/>
+        <input class='btn btn-primary' type='submit' value='vote'/>
     </form>";
-    echo "<span class=\"btn btn-default\">$row[vote]</span>";
+    echo "<span class=\"btn btn-default\" id='count-$row[id]'>$row[vote]</span>";
     echo ' </div>';
     echo ' </div>';
 }
 ?>
     </div>
-
-    <script src="bootstrap.min.js"></script>
     <script src="jquery-2.1.4.min.js"></script>
+    <script src="bootstrap.min.js"></script>
     <script>
         // function to vote for a contestant
 
         // first check if the person is login and if he/she has vote before
         function vote(id) {
             if (!id) {
-                return alert("cant find ur ID");
+                return alert("cant find user ID");
             }
             //check if the person is log in
             $.ajax({
@@ -69,11 +68,23 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 method: "POST",
                 data: { "id": id }
             }).done(function (resp) {
-                console.log(resp);
+                const response = JSON.parse(resp);
+                $('#count-' + id).text(response.votes);
+                alert(response.message);
             }).fail(function (err) {
-                alert(err);
+                const response = JSON.parse(err.responseText);
+                alert(response.message);
             })
         }
+
+        forms = $('form.vote-form');
+        forms.each(function() {
+            $(this).on('submit', function(e) {
+                e.preventDefault();
+                const id = $(this).data('id');
+                vote(id);
+            });
+        });
 
 
     </script>
